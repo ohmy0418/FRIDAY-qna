@@ -4,8 +4,8 @@
 - 이미 설정된 OS·플랫폼 시크릿 값은 덮어쓰지 않는다.
 - :func:`apply_deploy_env_defaults`는 **최초** ``import core.config`` (또는
   ``db.connect_rdb``) **이전**에 호출되어야 ``Config`` 객체에 반영된다.
-- 아래 기본값 중 DB·MinIO 등은 FRIDAY 배포 샘플을 따른 것이므로, 환경에 맞게
-  이 파일의 상수 또는 플랫폼 환경 변수로 조정할 것.
+- env.template(graphio 프레임워크 기본값)과 동일한 항목은 생략하고,
+  이 프로젝트에서 다른 값을 쓰는 항목·프로젝트 전용 항목만 선언한다.
 """
 
 from __future__ import annotations
@@ -25,71 +25,23 @@ def _set_if_blank(key: str, value: str) -> None:
 
 def apply_deploy_env_defaults() -> None:
     """비어 있는 키만 기본 문자열로 설정한다."""
-    _set_if_blank("TEST_UI", "true")
-    _set_if_blank("APP_HOST", "0.0.0.0")
-    _set_if_blank("APP_PORT", "8888")
-    _set_if_blank("APP_HEARTBEAT_SEC", "30")
-    _set_if_blank("LOG_LEVEL", "DEBUG")
-    _set_if_blank("LOG_DIRECTORY", "app_logs")
+    # 프로젝트 전용 (env.template에 없음)
     _set_if_blank("APP_ID", "dd39500f-6e21-41ab-ad20-8909d83ecc3e")
-    _set_if_blank("STORAGE_PATH", "GRAPHIO_APP_STORAGE")
-    _set_if_blank("GRAPHIO_APP_STORAGE_PATH", "GRAPHIO_APP_STORAGE")
-    _set_if_blank("GRAPHIO_APP_STORAGE", "graphio_app_storage")
-    _set_if_blank("GRAPHIO_APP_DB", "graphio_app.db")
-    _set_if_blank("DOCUMENT_STORE", "document_store")
-    _set_if_blank("EMBEDDING_MODEL", "text-embedding-3-small")
-    _set_if_blank("LLM_MODEL", "google/gemma-4-31B-it")
     _set_if_blank("LLM_MODEL_TYPE", "openAI")
-    _set_if_blank("LLM_API_ADDRESS", "http://192.168.109.254:32609/v1")
-    _set_if_blank("GRAPHIO_ONTOLOGY_HOST", "192.168.109.254")
-    _set_if_blank("GRAPHIO_ONTOLOGY_PORT", "32576")
-    _set_if_blank("GRAPHIO_ONTOLOGY_USER", "neo4j")
-    _set_if_blank("GRAPHIO_ONTOLOGY_PASS", "biris.manse")
-    _set_if_blank("C_APP_PLATFORM_HOST", "http://192.168.109.254")
-    _set_if_blank("C_APP_PLATFORM_PORT", "31557")
-    _set_if_blank("C_APP_PLATFORM_TIMEOUT", "30")
-    _set_if_blank("C_APP_PLATFORM_ADD_MESSAGE", "/graphio/app_platform/control/api/message/add")
-    _set_if_blank("C_APP_PLATFORM_UPDATE_TITLE", "/graphio/app_platform/control/api/thread/edit")
-    _set_if_blank("C_APP_PLATFORM_GET_APP_INFO", "/graphio/app_platform/control/api/detail")
-    _set_if_blank("KNOWLEDGE_GRAPH_HOST", "http://192.168.109.254")
-    _set_if_blank("KNOWLEDGE_GRAPH_PORT", "30058")
-    _set_if_blank("KNOWLEDGE_GRAPH_TIMEOUT", "30")
-    _set_if_blank("KNOWLEDGE_GRAPH_GET_KG_LIST", "/graphio/v1/knowledgeGraph/list")
-    _set_if_blank("CONTAINER_MANAGER_MQ_HOST", "192.168.109.254")
-    _set_if_blank("CONTAINER_MANAGER_MQ_PORT", "30988")
-    _set_if_blank("CONTAINER_MANAGER_MQ_USER", "admin")
-    _set_if_blank("CONTAINER_MANAGER_MQ_PASS", "admin123")
-    _set_if_blank(
-        "CONTAINER_MANAGER_MQ_HEADER_EXCHANGE",
-        "graphioapp.container-service.exchange",
-    )
-    _set_if_blank("PID_FILE", "process.pid")
-    _set_if_blank("C_MINIO_CLIENT_HOST", "192.168.109.254")
-    _set_if_blank("C_MINIO_CLIENT_PORT", "30901")
-    _set_if_blank("C_MINIO_CONTEXT_PATH", "download")
-    _set_if_blank("C_MINIO_ACCESS_KEY", "root")
-    _set_if_blank("C_MINIO_SECRET_KEY", "platform.manse")
-    _set_if_blank("C_MINIO_BUCKET_NAME", "friday")
-    _set_if_blank("C_DATABASE_HOST", "192.168.109.254")
-    _set_if_blank("C_DATABASE_PORT", "31032")
-    _set_if_blank("C_DATABASE_USER", "root")
-    _set_if_blank("C_DATABASE_PASSWORD", "biris.manse")
-    _set_if_blank("C_DATABASE_DB", "office_guide")
     _set_if_blank("C_DATABASE_SCHEMA", "friday")
     _set_if_blank("QNA_RAG_DB", "1")
     _set_if_blank("QNA_STRUCTURED_DB", "1")
-    _set_if_blank("C_PHOENIX_USE", "true")
-    _set_if_blank("C_PHOENIX_ENDPOINT", "http://192.168.109.254:31365/v1/traces")
-    _set_if_blank("C_PHOENIX_PROJECT_NAME", "APP_TEST")
-    _set_if_blank("RAG_SERVICE_URL", "http://192.168.101.20:9999")
-    _set_if_blank("C_GOVERNANCE_ENDPOINT", "http://192.168.109.254:30880")
-    _set_if_blank("C_GOVERNANCE_TIMEOUT", "30")
-    _set_if_blank("C_RERANK_URL", "http://192.168.101.129:30659")
-    _set_if_blank("C_RERANK_MODEL", "sigridjineth/ko-reranker-v1.1-preview")
-    _set_if_blank("C_DOCUMENT_TEMPLATE_PATH", "document_template")
-    _set_if_blank("C_DOCUMENT_TEMP_PATH", "/document_temp")
-    _set_if_blank("C_CHAT_FILE_ACCESS_PATH", "/mount/vol/chat_files")
-    _set_if_blank("LOG_CONSOLE_ENABLED", "True")
+
+    # env.template 기본값과 다른 항목
+    _set_if_blank("GRAPHIO_APP_STORAGE", "graphio_app_storage")
+    _set_if_blank("LLM_MODEL", "google/gemma-4-31B-it")
+    _set_if_blank("LLM_API_ADDRESS", "http://192.168.109.254:32609/v1")
+    _set_if_blank("C_APP_PLATFORM_PORT", "31557")
+    _set_if_blank("C_MINIO_CLIENT_PORT", "30901")
+    _set_if_blank("C_MINIO_SECRET_KEY", "platform.manse")
+    _set_if_blank("C_MINIO_BUCKET_NAME", "friday")
+    _set_if_blank("C_DATABASE_PORT", "31032")
+    _set_if_blank("C_DATABASE_DB", "office_guide")
 
     if (DEPLOY_LLM_API_KEY or "").strip() and not (os.environ.get("LLM_API_KEY") or "").strip():
         os.environ["LLM_API_KEY"] = DEPLOY_LLM_API_KEY.strip()

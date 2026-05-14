@@ -1,0 +1,39 @@
+# ======================================================================
+# [필수] graphio_app_framework 설치 설정
+# ----------------------------------------------------------------------
+# ※ 아래 3줄은 반드시 파일 "최상단"에 이 순서대로 작성해야 합니다.
+#   (다른 라이브러리보다 먼저 와야 정상 설치됩니다.)
+#
+#   1) --trusted-host   : graphio 서버 주소
+#                         (미작성 시 버전에 따라 SSL/신뢰 오류 발생)
+#   2) --find-links     : graphio wheel 저장소 URL
+#                         형식) http://<graphio 서버 주소>:<포트>/graphio/app_platform/control/api/wheel/
+#                           ├─ <graphio 서버 주소> : graphio 서버의 IP 또는 도메인 (예: 192.168.109.254)
+#                           ├─ <포트>             : wheel 저장소 포트 (예: 31333)
+#                           └─ 경로               : /graphio/app_platform/control/api/wheel/ (고정)
+#   3) graphio_app_framework==<버전> : 원하는 버전 명시
+# ======================================================================
+
+# NOTE: 폐쇄망일 경우 주석 해제 필수
+# --no-index
+
+# NOTE: IP 주소 사용 시 예시
+# --trusted-host 192.168.109.254
+# --find-links http://192.168.109.254:31333/graphio/app_platform/control/api/wheel/
+
+# NOTE: 도메인 사용 시 예시
+# --trusted-host graphio.mobigen.com
+# --find-links https://graphio.mobigen.com/graphio/app_platform/control/api/wheel/
+
+--trusted-host stg-graphio.mobigen.com
+--find-links https://stg-graphio.mobigen.com/graphio/app_platform/control/api/wheel/
+graphio_app_framework==0.1.0
+
+# ======================================================================
+# 프로젝트 의존성
+# 필요한 라이브러리를 아래에 추가하세요.
+# ======================================================================
+
+# 예시
+# pytest>=8.4
+# pytest-asyncio>=1.0

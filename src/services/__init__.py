@@ -1,0 +1,3 @@
+from services.deploy_env_defaults import load_repo_dotenv_then_apply_defaults
+
+load_repo_dotenv_then_apply_defaults()

@@ -154,8 +154,7 @@ def build_success_answer(_question: str, chunks: list[RetrievalChunk], route_typ
 
 _FALLBACK_ANSWERS: dict[str, str] = {
     "no_result": (
-        "현재 검색 결과만으로는 정확한 답변을 확인하기 어렵습니다.\n\n"
-        "정확한 안내가 필요하시면 피플팀에 문의해 주세요."
+        "참고할 만한 사내 정보를 찾지 못했습니다. 질문을 조금 바꿔 다시 시도하거나, 필요 시 피플팀에 문의해 주세요."
     ),
     "routing_failed": (
         "질문을 정확히 이해하지 못했습니다.\n\n"

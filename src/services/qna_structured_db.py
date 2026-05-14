@@ -1182,8 +1182,7 @@ async def _fetch_person_name_dept_async(emp_nm: str, dept_hint: str) -> list[dic
 
 def _task_owner_not_found_guidance(_raw: str) -> list[RetrievalChunk]:
     body = (
-        "현재 검색 결과만으로는 정확한 답변을 확인하기 어렵습니다.\n\n"
-        "정확한 안내가 필요하시면 피플팀에 문의해 주세요."
+        "규정·업무 담당 정보를 조회하지 못했습니다. 담당 확인이 필요하면 피플팀에 문의해 주세요."
     )
     return [_structured_guidance_chunk(KIND_TASK_OWNER_NOT_FOUND, "규정 업무 담당", body, source=_MOBIGEN_SOURCE)]
 

@@ -40,7 +40,7 @@ def apply_deploy_env_defaults() -> None:
     _set_if_blank("EMBEDDING_MODEL", "text-embedding-3-small")
     _set_if_blank("LLM_MODEL", "google/gemma-4-31B-it")
     _set_if_blank("LLM_MODEL_TYPE", "openAI")
-    _set_if_blank("LLM_API_ADDRESS", "http://192.168.109.254:32608/v1")
+    _set_if_blank("LLM_API_ADDRESS", "http://192.168.109.254:32609/v1")
     _set_if_blank("GRAPHIO_ONTOLOGY_HOST", "192.168.109.254")
     _set_if_blank("GRAPHIO_ONTOLOGY_PORT", "32576")
     _set_if_blank("GRAPHIO_ONTOLOGY_USER", "neo4j")

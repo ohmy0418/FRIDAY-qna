@@ -65,7 +65,11 @@ def _invoke_route_llm(question: str, policy: QnaRuntimePolicy) -> RouteType | No
     raw = msg.content
     if isinstance(raw, list):
         return None
-    return _parse_route_json(str(raw))
+    raw_str = str(raw)
+    result = _parse_route_json(raw_str)
+    if result is None:
+        LOG.warning("qna_route_llm: could not parse route JSON, raw=%r", raw_str[:200])
+    return result
 
 
 def apply_route_guardrail(question: str, llm_route: RouteType | None) -> RouteType:

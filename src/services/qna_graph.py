@@ -54,24 +54,35 @@ _CLARIFICATION_STRUCTURED_KINDS = frozenset({
 })
 _OFF_TOPIC_CLASSIFY_PROMPT = """\
 당신은 사내 업무 챗봇의 질문 분류기입니다.
-아래 질문이 회사 업무(사내 규정·담당자·부서·인사정보·출장·휴가·장비·법인카드 등)와 관련된 질문이면 'yes', \
-업무와 전혀 무관한 질문(날씨·인사말·기분·음식·스포츠·개인 감정·잡담·일반 상식 등)이면 'no'만 답하세요.
-반드시 'yes' 또는 'no' 한 단어만 출력하세요.
+아래 질문이 회사 업무(사내 규정·담당자·부서·인사정보·출장·휴가·장비·법인카드 등)와 관련된 질문이면 'YES', \
+업무와 전혀 무관한 질문(날씨·인사말·기분·음식·스포츠·개인 감정·잡담·일반 상식 등)이면 'NO'만 답하세요.
+반드시 'YES' 또는 'NO' 딱 한 단어만 출력하세요. 설명, 이유, 다른 말은 절대 쓰지 마세요.
 
 질문: "{question}"
-"""
+답:"""
 
 
 async def _is_off_topic_llm(question: str, policy: Any) -> bool:
     """LLM으로 업무 관련 여부를 분류. 업무 무관이면 True를 반환."""
-    llm = _build_llm_client(policy, temperature=0, max_tokens=5, disable_streaming=True)
+    llm = _build_llm_client(policy, temperature=0, max_tokens=10, disable_streaming=True)
     if llm is None:
         return False
     prompt = _OFF_TOPIC_CLASSIFY_PROMPT.format(question=question.strip())
     try:
         msg = await llm.ainvoke([HumanMessage(content=prompt)])
         answer = (msg.content if isinstance(msg.content, str) else str(msg.content)).strip().lower()
-        return answer.startswith("no")
+        LOG.debug("qna_graph: off-topic raw answer=%r for question=%r", answer, question[:40])
+        # YES/yes/네/예 계열 → 업무 관련 → off-topic 아님
+        _ON_TOPIC = ("yes", "네", "예")
+        if any(answer.startswith(p) for p in _ON_TOPIC):
+            return False
+        # NO/no/아니 계열 → 업무 무관 → off-topic
+        _OFF_TOPIC = ("no", "아니")
+        if any(answer.startswith(p) for p in _OFF_TOPIC):
+            return True
+        # 판별 불가(빈 응답, 이상한 출력 등) → 안전하게 off-topic 아님으로 처리
+        LOG.warning("qna_graph: off-topic answer unrecognized=%r, treating as on-topic", answer)
+        return False
     except Exception as e:
         LOG.warning("qna_graph: off-topic classifier failed: %s", e, exc_info=True)
         return False
